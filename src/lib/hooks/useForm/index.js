@@ -18,17 +18,23 @@ const useForm = ({
   const [formSubmitCount, setFormSubmitCount] = useState(0);
   const valuesEffectRef = useRef(null);
   const touchedEffectRef = useRef(null);
+  const formIsValidRef = useRef(null);
 
   const validateForm = () => {
     if (!validate) return true;
     const validationErrors = validate(values);
     setErrors(validationErrors);
-    return !!Object.keys(validationErrors).length;
+    return !Object.keys(validationErrors).length;
   };
 
   useEffect(() => {
-    const formIsValid = !!Object.keys(errors).length;
-    setIsValid(formIsValid);
+    if (formIsValidRef.current) {
+      const formIsValid = !Object.keys(errors).length;
+      setIsValid(formIsValid);
+    }
+    if (!formIsValidRef.current) {
+      formIsValidRef.current = true;
+    }
   }, [errors]);
 
   useEffect(() => {
@@ -41,7 +47,7 @@ const useForm = ({
     if (validateOnChange && valuesEffectRef.current) {
       validateForm();
     }
-    if (!valuesEffectRef) {
+    if (!valuesEffectRef.current) {
       valuesEffectRef.current = true;
     }
   }, [values]);
@@ -50,7 +56,7 @@ const useForm = ({
     if (validateOnBlur && touchedEffectRef.current) {
       validateForm();
     }
-    if (!touchedEffectRef) {
+    if (!touchedEffectRef.current) {
       touchedEffectRef.current = true;
     }
   }, [touched]);
@@ -80,9 +86,14 @@ const useForm = ({
   };
 
   const resetForm = () => {
+    valuesEffectRef.current = null;
+    touchedEffectRef.current = null;
+    formIsValidRef.current = null;
     setValues(initialValues);
     setErrors(initialErrors);
     setTouched(initialTouched);
+    setIsValid(initialIsValid);
+    setFormSubmitCount(0);
   };
 
   const handleSubmit = event => {
