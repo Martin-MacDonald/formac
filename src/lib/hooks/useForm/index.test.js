@@ -230,6 +230,19 @@ describe('useForm', () => {
       });
       expect(result.current.touched).toEqual({ one: true });
     });
+
+    it('should not update if field already touched', () => {
+      const { result } = renderHook(() => useForm(mockProps));
+      expect(result.current.touched).toEqual({});
+      act(() => {
+        result.current.handleBlur({ target: { name: 'one' } });
+      });
+      expect(result.current.touched).toEqual({ one: true });
+      act(() => {
+        result.current.handleBlur({ target: { name: 'one' } });
+      });
+      expect(result.current.touched).toEqual({ one: true });
+    });
   });
 
   describe('validateForm', () => {
@@ -291,7 +304,7 @@ describe('useForm', () => {
       expect(mockOnSubmit).not.toHaveBeenCalled();
     });
 
-    it('should submit the form if there are no validation errors and reset the form', () => {
+    it('should submit the form if there are no validation errors', () => {
       const { result } = renderHook(() => useForm(mockProps));
       act(() => {
         result.current.handleChange({ target: { name: 'one', value: '1' } });
@@ -299,12 +312,16 @@ describe('useForm', () => {
       act(() => {
         result.current.handleSubmit();
       });
-      expect(mockOnSubmit).toHaveBeenCalledWith({ one: '1', two: '' });
-      expect(result.current.values).toEqual({ one: '', two: '' });
-      expect(result.current.touched).toEqual({});
-      expect(result.current.errors).toEqual({});
-      expect(result.current.formSubmitCount).toBe(0);
-      expect(result.current.isValid).toBe(true);
+      expect(mockOnSubmit).toHaveBeenCalledWith({ one: '1', two: '' }, expect.any(Function));
+    });
+
+    it('should prevent default for form if event is passed', () => {
+      const { result } = renderHook(() => useForm(mockProps));
+      const mockPreventDefault = jest.fn();
+      act(() => {
+        result.current.handleSubmit({ preventDefault: mockPreventDefault  });
+      });
+      expect(mockPreventDefault).toHaveBeenCalled();
     });
   });
 

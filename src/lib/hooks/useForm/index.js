@@ -96,7 +96,7 @@ const useForm = ({
     setFormSubmitCount(0);
   };
 
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     if (event) {
       event.preventDefault();
     }
@@ -113,8 +113,7 @@ const useForm = ({
       )
     );
     if (validateForm()) {
-      onSubmit(values);
-      resetForm();
+      onSubmit(values, resetForm);
     }
   };
 
