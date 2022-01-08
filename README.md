@@ -164,7 +164,7 @@ import { Form, Field } from 'formac';
 
 It is recommended to use the `Form` component as it wraps context round the `children`. However there may be instances where using the the `useForm` hook makes more sense. 
 
-The inputs and outputs from `useForm` are the same as [Form](#form).
+The inputs and outputs from `useForm` are the same as [Form](#form-).
 
 ```javascript
 import { useForm } from 'formac';
