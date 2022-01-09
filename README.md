@@ -88,7 +88,7 @@ import { Form } from 'formac';
 | validate             | -       | No       | (values) => { ... }              | { [name]: string \| true } | This function is what is used to check if the form is valid. It will run anytime an `onChange`, `onBlur` or `submit` event happens (unless otherwise told not to). It must return an object with the `name` of the fields with errors and conditionally either just `true` to indicate that field is in error or a `string` stating the error reason. |
 | initialErrors        | {}      | No       | { [name]: string \| true, ... }  | -                          | If you want to supply an initial error state to your form then you can do so here. Just supply an object with the `name` of the fields along with a `string` or `true` |
 | initialTouched       | {}      | No       | { [name]: true, ... }            | -                          | If you want to let the form know that initially certain fields have been touched then do so here. |
-| initialIsValid       | true    | No       | boolean                          | -                          | By default your form is valid but if you want to set it initially to `false` then this prop is for you. |
+| initialIsValid       | true    | No       | boolean                          | -                          | By default your form validity is based on if there `errors|initialErrors` but if you want to set it initially to `false|true` then this prop is for you. |
 | runInitialValidation | false   | No       | boolean                          | -                          | As stated above, validation will only run `onChange`, `onBlur` or on `submit` events. If you want validation to run as soon as your form is loaded then set this prop to `true`. |
 | validateOnChange     | true    | No       | boolean                          | -                          | If you do not want your form to validate on `onChange` events then set this prop to `false`. |
 | validateOnBlur       | {}      | No       | boolean                          | -                          | If you do not want your form to validate on `onBlur` events then set this prop to `false`. |
@@ -212,6 +212,8 @@ return (
 ### **`FormContext`**
 
 As mentioned above FormContext is automatically added round the children of `Form`. However if you are using `useForm` instead and want to give your components context then it is there if you need it.
+
+Additionally if you have some custom components inside your Form that need to access the context then you can do `useContext(FormContext)`.
 
 ```javascript
 import { useForm, FormContext } from 'formac';

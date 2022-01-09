@@ -268,12 +268,17 @@ describe('useForm', () => {
   describe('isValid', () => {
     it('should return the isValid the same as initialIsValid', () => {
       const { result } = renderHook(() => useForm({ ...mockProps, initialIsValid: false }));
-      expect(result.current.isValid).toBe(false)
+      expect(result.current.isValid).toBe(false);
     });
 
-    it('should return the initial form as valid if no initialIsValid prop is passed', () => {
+    it('should return the initial form as valid if there are no initial errors and initialIsValid is not passed', () => {
       const { result } = renderHook(() => useForm(mockProps));
-      expect(result.current.isValid).toBe(true)
+      expect(result.current.isValid).toBe(true);
+    });
+
+    it('should return the initial form as invalid if there are initial errors and initialIsValid is not passed', () => {
+      const { result } = renderHook(() => useForm({ ...mockProps, initialErrors: { one: 'A big error!' } }));
+      expect(result.current.isValid).toBe(false);
     });
 
     it('should return the form as invalid if there are errors once a change has happened', () => {

@@ -1,11 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 
+const getInitialValidState = (initialIsValid, initialErrors) =>
+  initialIsValid !== undefined
+    ? initialIsValid
+    : !Object.keys(initialErrors).length;
+
 const useForm = ({
   initialValues,
   onSubmit,
   initialTouched = {},
   initialErrors = {},
-  initialIsValid = true,
+  initialIsValid,
   runInitialValidation = false,
   validate,
   validateOnChange = true,
@@ -14,7 +19,7 @@ const useForm = ({
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState(initialErrors);
   const [touched, setTouched] = useState(initialTouched);
-  const [isValid, setIsValid] = useState(initialIsValid);
+  const [isValid, setIsValid] = useState(getInitialValidState(initialIsValid, initialErrors));
   const [formSubmitCount, setFormSubmitCount] = useState(0);
   const valuesEffectRef = useRef(null);
   const touchedEffectRef = useRef(null);
@@ -66,7 +71,7 @@ const useForm = ({
     setValues(newValues);
   };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     updateValue({ name, value });
   };
@@ -75,10 +80,10 @@ const useForm = ({
     updateValue({ name, value });
   };
 
-  const handleBlur = event => {
+  const handleBlur = (event) => {
     const { name } = event.target;
     if (!touched[name]) {
-      setTouched(prevTouched => ({
+      setTouched((prevTouched) => ({
         ...prevTouched,
         [name]: true,
       }));
@@ -92,7 +97,7 @@ const useForm = ({
     setValues(initialValues);
     setErrors(initialErrors);
     setTouched(initialTouched);
-    setIsValid(initialIsValid);
+    setIsValid(getInitialValidState(initialIsValid, initialErrors));
     setFormSubmitCount(0);
   };
 
@@ -101,7 +106,7 @@ const useForm = ({
       event.preventDefault();
     }
     setFormSubmitCount(
-      prevFormSubmit => prevFormSubmit + 1
+      (prevFormSubmit) => prevFormSubmit + 1
     );
     setTouched(
       Object.keys(values).reduce(
