@@ -14,6 +14,14 @@
     "type": "git",
     "url": "git+https://github.com/Martin-MacDonald/formac.git"
   },
+  "keywords": [
+    "formac",
+    "form",
+    "forms",
+    "react",
+    "hooks",
+    "validation"
+  ],
   "author": "Martin-MacDonald",
   "license": "ISC",
   "bugs": {
